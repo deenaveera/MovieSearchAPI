@@ -1,5 +1,5 @@
 <?php
-$base_url = "http://" . $_SERVER['SERVER_NAME'] . '/search-api/';
+$base_url = "http://" . $_SERVER['SERVER_NAME'] . '/search-api/moviesearch/';
 
 class Config {
 	
