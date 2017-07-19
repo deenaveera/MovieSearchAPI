@@ -3,7 +3,42 @@ require 'config.php';
 $term = $_GET['term'];
 $obj = new Config();
 $jsonresponse = $obj->CURL($term);
-//$json = json_encode($jsonresponse);
+$filesearch = 'searchresults.json';
+ $tempArray = array();
+ if (file_exists($filesearch))
+ {
+  $oldsearchresponse = json_decode(file_get_contents($filesearch), true);
+  if(!empty($oldsearchresponse))
+  {
+	  foreach($oldsearchresponse as $key => $val){
+		  $tempArray[] = $val;
+	  }
+   
+  }
+
+  if(!empty($jsonresponse))
+  {
+   $tempArray[] = $jsonresponse;
+  }
+  
+ }
+ else
+ {
+  if(!empty($jsonresponse))
+  {
+   $tempArray[] = $jsonresponse;
+  }
+ }
+ 
+ if(count($tempArray) > 6)
+ {
+	unset($tempArray[0]);
+	$tempArray = array_values($tempArray);
+ }
+ 
+$fp = fopen('searchresults.json', 'w');
+fwrite($fp, json_encode($tempArray));
+fclose($fp);
 ?>
 
     <div align="center" style="margin-top:100px;">

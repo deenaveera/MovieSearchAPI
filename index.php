@@ -43,17 +43,23 @@ require 'config.php';
     </head>
 
     <body>
-        <form method="GET" action="index.php">
-            <div class="ui-widget" align="center" style="margin-top:120px;">
-                <label for="term">Movies: </label>
-                <span class="glyphicon glyphicon-search"></span>
-                <input name="term" id="term" placeholder="Search" size="40" style="border: 2px solid #a1a1a1;">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <form method="GET" action="index.php">
+                        <div class="ui-widget" align="center" style="margin-top:120px;">
+                            <label for="term">Movies: </label>
+                            <span class="glyphicon glyphicon-search"></span>
+                            <input name="term" id="term" placeholder="Search" size="40" style="border: 2px solid #a1a1a1;">
+                        </div>
+                    </form>
+                </div>
+
             </div>
-        </form>
 
-
-
-        <?php
+            <?php
 
 if(!empty($_GET)){
 $term = $_GET['term'];
@@ -61,28 +67,53 @@ $obj = new Config();
 $jsonresponse = $obj->CURL($term);
 ?>
 
-            <div>
-                <table align="center">
-                    <tr>
-                        <td><a href="<?php echo $base_url.'details.php?term='.$jsonresponse['Title']; ?>"><img src="<?php echo $jsonresponse['Poster']; ?>" alt="<?php echo $jsonresponse['Title']; ?>" height="100" width="100"></a></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="<?php echo $base_url.'details.php?term='.$jsonresponse['Title']; ?>">
-                                <?php echo $jsonresponse['Title']; ?>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
+                <div class="row">
+                    <div class="col-md-8">
+                        <table align="center">
+                            <tr>
+                                <td><a href="<?php echo $base_url.'details.php?term='.$jsonresponse['Title']; ?>"><img src="<?php echo $jsonresponse['Poster']; ?>" alt="<?php echo $jsonresponse['Title']; ?>" height="100" width="100"></a></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="<?php echo $base_url.'details.php?term='.$jsonresponse['Title']; ?>">
+                                        <?php echo $jsonresponse['Title']; ?>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
 
-            </div>
+                    </div>
 
-            <?php } ?>
+                    <?php } ?>
 
+                    <?php
+$filesearch = 'searchresults.json';
+if (file_exists($filesearch))
+ {
+  $oldsearchresponse = json_decode(file_get_contents($filesearch), true);
+  if(!empty($oldsearchresponse))
+  {
+	  $reversedArray = array_reverse($oldsearchresponse);
+	 // echo '<pre>'; print_r($reversedArray); exit;
+?>
+                        <div class="row" style="width: 50% !important;floar: right !important; margin-left: 350px !important;">
+                            <?php
+	  foreach($reversedArray as $key => $val){ ?>
 
+                                <div class="col-md-4">
+                                    <a href="<?php echo $base_url.'details.php?term='.$val['Title']; ?>"><img src="<?php echo $val['Poster']; ?>" alt="<?php echo $val['Title']; ?>" height="100" width="100"></a><br><br>
+                                </div>
 
+                                <?php } ?>
+                        </div>
 
+                        <?php  
+  }
+ }
 
+?>
+
+                </div>
     </body>
 
     </html>
